@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(new MyApp());
@@ -97,7 +100,8 @@ class _ChatScreenState extends State<ChatScreen> {
                             reverse: true,
                             itemCount: snapshot.data.documents.length,
                             itemBuilder: (context, index) {
-                              List r = snapshot.data.documents.reversed.toList();
+                              List r =
+                                  snapshot.data.documents.reversed.toList();
                               return ChatMessage(r[index].data);
                             });
                     }
@@ -146,8 +150,23 @@ class _TextComposerState extends State<TextComposer> {
         child: Row(
           children: <Widget>[
             Container(
-              child:
-                  IconButton(icon: Icon(Icons.photo_camera), onPressed: () {}),
+              child: IconButton(
+                  icon: Icon(Icons.photo_camera),
+                  onPressed: () async {
+                    await _ensureLoggedIn();
+                    File imgFile =
+                        await ImagePicker.pickImage(source: ImageSource.gallery);
+
+                    if (imgFile == null) return;
+
+                    StorageUploadTask task = FirebaseStorage.instance
+                        .ref()
+                        .child(googleSignIn.currentUser.id.toString() +
+                            DateTime.now().millisecondsSinceEpoch.toString())
+                        .putFile(imgFile);
+
+                    _sendMessage(imgUrl: (await task.future).downloadUrl.toString());
+                  }),
             ),
             Expanded(
                 child: TextField(
