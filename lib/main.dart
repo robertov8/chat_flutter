@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() {
   runApp(new MyApp());
@@ -15,6 +17,22 @@ final ThemeData kIOSTheme = ThemeData(
 
 final ThemeData kDefaultTheme = ThemeData(
     primarySwatch: Colors.purple, accentColor: Colors.orangeAccent[400]);
+
+final googleSignIn = GoogleSignIn();
+final auth = FirebaseAuth.instance;
+
+Future<Null> _ensureLoggedIn() async {
+  GoogleSignInAccount user = googleSignIn.currentUser;
+
+  if (user == null) user = await googleSignIn.signInSilently();
+  if (user == null) user = await googleSignIn.signIn();
+  if (await auth.currentUser() == null) {
+    GoogleSignInAuthentication credentials =
+        await googleSignIn.currentUser.authentication;
+    await auth.signInWithGoogle(
+        idToken: credentials.idToken, accessToken: credentials.accessToken);
+  }
+}
 
 class MyApp extends StatelessWidget {
   @override
