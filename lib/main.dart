@@ -50,6 +50,14 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         body: Column(
           children: <Widget>[
+            Expanded(
+              child: ListView(
+                children: <Widget>[ChatMessage(), ChatMessage(), ChatMessage()],
+              ),
+            ),
+            Divider(
+              height: 1.0,
+            ),
             Container(
               decoration: BoxDecoration(color: Theme.of(context).cardColor),
               child: TextComposer(),
@@ -107,6 +115,40 @@ class _TextComposerState extends State<TextComposer> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ChatMessage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(''),
+            ),
+          ),
+          Expanded(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Roberto',
+                style: Theme.of(context).textTheme.subhead,
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 5.0),
+                child: Text('teste'),
+              )
+            ],
+          ))
+        ],
       ),
     );
   }
