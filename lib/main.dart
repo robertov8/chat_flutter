@@ -47,6 +47,47 @@ class _ChatScreenState extends State<ChatScreen> {
           elevation:
               Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
         ),
+        body: Column(
+          children: <Widget>[
+            Container(
+              decoration: BoxDecoration(color: Theme.of(context).cardColor),
+              child: TextComposer(),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TextComposer extends StatefulWidget {
+  @override
+  _TextComposerState createState() => _TextComposerState();
+}
+
+class _TextComposerState extends State<TextComposer> {
+  @override
+  Widget build(BuildContext context) {
+    return IconTheme(
+      data: IconThemeData(color: Theme.of(context).accentColor),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
+        decoration: Theme.of(context).platform == TargetPlatform.iOS
+            ? BoxDecoration(border: Border(top: BorderSide(color: Colors.grey)))
+            : null,
+        child: Row(
+          children: <Widget>[
+            Container(
+              child:
+                  IconButton(icon: Icon(Icons.photo_camera), onPressed: () {}),
+            ),
+            Expanded(
+                child: TextField(
+              decoration:
+                  InputDecoration.collapsed(hintText: 'Enviar uma mensagem'),
+            )),
+          ],
+        ),
       ),
     );
   }
